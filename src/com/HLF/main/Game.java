@@ -1,0 +1,294 @@
+package com.HLF.main;
+
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import javax.swing.JFrame;
+import com.HLF.Entities.Enemy;
+import com.HLF.Entities.Entity;
+import com.HLF.Entities.Player;
+import com.HLF.Entities.ShurikenThrow;
+import com.HLF.Entities.ShurikenWall;
+import com.HLF.Graphics.SpriteSheet;
+import com.HLF.Graphics.UI;
+import com.HLF.World.World;
+import java.util.*;
+
+
+
+public class Game extends Canvas implements Runnable, KeyListener {
+	
+	/*CONSTANTES*/
+
+	private static final long serialVersionUID = 1L;
+	public static JFrame frame;
+	private Thread thread;
+	private boolean isRunning = true;
+	public static final int WIDTH = 240;
+	public static final int HEIGHT = 160;
+	public static final int SCALE = 3;
+	
+	private int currentLevel = 1, maxLevel = 3;
+	
+	private BufferedImage image;
+	
+	public static List<Entity> entities;
+	public static List<Enemy> enemies;
+	public static List<ShurikenThrow> shuri;
+	public static List<ShurikenWall> shuriw;
+	
+	public static SpriteSheet spritesheet;
+	
+	public static Player player;
+	
+	public static World world;
+	
+	public static UI ui;
+	
+	public static String GameState = "Normal";
+	private boolean GameOver;
+	private int framesGameOver = 0;
+	private boolean restartMap = false;
+	
+	public static Random rand;
+	
+	/***/
+	
+	/*CONSTRUTOR*/
+	
+	public Game() {
+		rand = new Random();
+		addKeyListener(this);
+		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
+		initFrame();
+		//Inicializando objetos
+		ui = new UI();
+		image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+		entities = new ArrayList<Entity>();
+		enemies = new ArrayList<Enemy>();
+		shuri = new ArrayList<ShurikenThrow>();
+		shuriw = new ArrayList<ShurikenWall>();
+		spritesheet = new SpriteSheet("/spritesheet.png");
+		
+		//Inicializando o player
+		player = new Player(0, 0, 16, 16, spritesheet.getSprite(80, 16, 16, 16));
+		entities.add(player);
+		world = new World("/map1.png");
+
+	}
+	
+	/***/
+	
+	/*METODOS*/
+	
+	public void initFrame() {
+		frame = new JFrame("Game #1");
+		frame.add(this);
+		frame.setResizable(false);
+		frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+	}
+	
+	public synchronized void start() {
+		thread = new Thread(this);
+		isRunning = true;
+		thread.start();
+	}
+	
+	public synchronized void stop() {
+		isRunning = false;
+		
+		try {
+			thread.join();
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		Game game = new Game();
+		game.start();
+	}
+	
+	public void update() {
+		
+		if(GameState == "Normal") {
+			restartMap = false;
+			
+			for(int i = 0; i < entities.size(); i++) {
+				Entity e = entities.get(i);
+				e.update();
+			}
+			
+			for(int i = 0; i < shuri.size(); i++)
+				shuri.get(i).update();
+			
+			nextLevel();
+		
+		} 
+		
+		else if(GameState == "End") {
+			entities.clear();
+			framesGameOver++;
+			if(framesGameOver == 30) {
+				framesGameOver = 0;
+				if(GameOver)
+					GameOver = false;
+				else
+					GameOver = true;
+			}
+		
+			if(restartMap) {
+				restartMap = false;
+				GameState = "Normal";
+				currentLevel = 1;
+				String map = "map"+currentLevel+".png";
+				World.restart(map);
+			}
+		}
+	}
+	
+	public void render() {
+		BufferStrategy bs = this.getBufferStrategy();
+		
+		if(bs == null) {
+			this.createBufferStrategy(3);
+			return;
+		}
+		
+		Graphics g = image.getGraphics();
+		g.setColor(new Color(0));
+		g.fillRect(0, 0, WIDTH, HEIGHT);
+		
+		/*Renderização do jogo*/
+		//Graphics2D g2 = (Graphics2D) g;
+		world.render(g);
+		for(int i = 0; i < entities.size(); i++) {
+			Entity e = entities.get(i);
+			e.update();
+			e.render(g);
+		}
+		
+		for(int i = 0; i < shuri.size(); i++) {
+			shuri.get(i).render(g);
+		}
+		
+		ui.render(g);
+		
+		/***/
+		
+		g.dispose();
+		g = bs.getDrawGraphics();
+		g.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
+		
+		if(GameState.equals("End")) {
+			Graphics2D g2 = (Graphics2D)g;
+			g2.setColor(new Color(0,0,0,100));
+			g2.fillRect(0, 0, WIDTH*SCALE, HEIGHT*SCALE);
+			g.setFont(new Font("arial", Font.BOLD, 72));
+			g.setColor(Color.white);
+			g.drawString("GAME OVER", WIDTH/2 + 8, HEIGHT/2 + 130);
+			g.setFont(new Font("arial", Font.BOLD, 36));
+			g.setColor(Color.white);
+			if(GameOver)
+				g.drawString("Press 'R' to restart", WIDTH/2 + 72, HEIGHT/2 + 170);
+		}
+		bs.show();
+	}
+	
+	public void run() {
+		long lastTime = System.nanoTime();
+		double amountOfUP = 60.0;
+		double ns = 1000000000 / amountOfUP;
+		double delta = 0;
+		int frames = 0;
+		double timer = System.currentTimeMillis();
+		requestFocus();
+		
+		while(isRunning) {
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			
+			if(delta >= 1) {
+				update();
+				render();
+				frames++;
+				delta--;
+			}
+			
+			if(System.currentTimeMillis() - timer >= 1000) {
+				System.out.println("FPS: " + frames);
+				frames = 0;
+				timer += 1000;
+			}
+		}
+		
+		stop();
+		
+
+	}
+
+	public void keyPressed(KeyEvent k) {
+		if(k.getKeyCode() == KeyEvent.VK_D) {
+			player.right = true;
+		} else if(k.getKeyCode() == KeyEvent.VK_A) {
+			player.left = true;
+		}
+		
+		if(k.getKeyCode() == KeyEvent.VK_W) {
+			player.up = true;
+		} else if(k.getKeyCode() == KeyEvent.VK_S) {
+			player.down = true;
+		}
+		
+		if(k.getKeyCode() == KeyEvent.VK_SPACE) {
+			player.shuriT = true;
+		}
+		
+		if(k.getKeyCode() == KeyEvent.VK_R) {
+			restartMap = true;
+		}
+	}
+
+	public void keyReleased(KeyEvent k) {
+		if(k.getKeyCode() == KeyEvent.VK_D) {
+			player.right = false;
+		} else if(k.getKeyCode() == KeyEvent.VK_A) {
+			player.left = false;
+		}
+		
+		if(k.getKeyCode() == KeyEvent.VK_W) {
+			player.up = false;
+		} else if(k.getKeyCode() == KeyEvent.VK_S) {
+			player.down = false;
+		}
+	}
+
+	public void keyTyped(KeyEvent k) {
+		
+	}
+	
+	public void nextLevel() {
+		if(player.noEnemies() && player.inPortal) {
+			currentLevel++;
+			if(currentLevel > maxLevel) {
+				currentLevel = 1; 
+			}
+			String map = "map"+currentLevel+".png";
+			World.restart(map);
+				
+		}
+	}
+	
+		/***/
+}
