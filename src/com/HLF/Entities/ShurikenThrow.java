@@ -70,7 +70,7 @@ public class ShurikenThrow extends Entity{
 			ShurikenWall shuriw = new ShurikenWall(this.getX(), this.getY(), 16, 16, null);
 			Game.shuriw.add(shuriw);
 			if(Game.player.removeShuri)
-				Game.shuri.remove(this);
+				Game.shuri.clear();
 	
 		}
 	}

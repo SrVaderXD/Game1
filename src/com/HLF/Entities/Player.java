@@ -196,7 +196,7 @@ public class Player extends Entity{
 						ammo = 1;
 					weapon = true;
 					removeShuri = true;
-					Game.shuriw.remove(i);
+					Game.shuriw.clear();
 				}
 			}
 		}
