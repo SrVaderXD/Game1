@@ -11,7 +11,6 @@ public class Entity {
 	
 	/*VARIAVEIS*/
 	public static BufferedImage Heart = Game.spritesheet.getSprite(96, 0, 16, 16);
-	public static BufferedImage Cactus = Game.spritesheet.getSprite(128, 16, 16, 16);
 	public static BufferedImage Shuriken = Game.spritesheet.getSprite(128, 0, 16, 16);
 	public static BufferedImage ShurikenR = Game.spritesheet.getSprite(96, 48, 16, 16);
 	public static BufferedImage ShurikenL = Game.spritesheet.getSprite(112, 48, 16, 16);
@@ -22,8 +21,7 @@ public class Entity {
 	public static BufferedImage StopedShuriL = Game.spritesheet.getSprite(112, 80, 16, 16);
 	public static BufferedImage StopedShuriU = Game.spritesheet.getSprite(144, 80, 16, 16);
 	public static BufferedImage StopedShuriD = Game.spritesheet.getSprite(128, 80, 16, 16);
-	public static BufferedImage enemyDamage = Game.spritesheet.getSprite(144, 16, 16, 16);
-	
+
 	
 	protected double x;
 	protected double y;

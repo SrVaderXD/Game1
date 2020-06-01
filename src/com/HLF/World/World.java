@@ -54,10 +54,26 @@ public class World {
 						Game.player.setX(xx*16);
 						Game.player.setY(yy*16);
 					} else if(pixelAtual == 0xFFFF0000) {
-						// Enemy
-						Enemy en = new Enemy(xx*TILE_SIZE, yy*TILE_SIZE, 16, 16, Entity.Cactus, 0.4, 35, 32, 64);
+						// Enemy Cactus
+						Enemy en = new Enemy(xx*TILE_SIZE, yy*TILE_SIZE, 16, 16, 0.4, 35, 32, 64,
+								128, 16, 0.5);
 						Game.entities.add(en);
 						Game.enemies.add(en);
+						
+					} else if(pixelAtual == 0xFFFF6A00) {
+						// Enemy Sand Monster
+						Enemy en = new Enemy(xx*TILE_SIZE, yy*TILE_SIZE, 16, 16, 0.5, 17, 32, 80,
+								144, 16, 0.7);
+						Game.entities.add(en);
+						Game.enemies.add(en);
+						
+					} else if(pixelAtual == 0xFFFFD800) {
+						// Enemy Muscle Cactus
+						Enemy en = new Enemy(xx*TILE_SIZE, yy*TILE_SIZE, 16, 16, 0.6, 70, 32, 96,
+									144, 0, 1.0);
+						Game.entities.add(en);
+						Game.enemies.add(en);
+						
 					} else if(pixelAtual == 0xFF404040) {
 						// Shuriken
 						Game.entities.add(new Shuriken(xx*TILE_SIZE, yy*TILE_SIZE, 16, 16, Entity.Shuriken));

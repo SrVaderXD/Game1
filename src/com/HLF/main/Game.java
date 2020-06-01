@@ -53,8 +53,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static UI ui;
 	
 	public static String GameState = "Normal";
-	private boolean GameOver;
-	private int framesGameOver = 0;
+	private boolean GameOver, NextLevel;
+	private int framesGameOver = 0, framesNextLevel = 0;
 	private boolean restartMap = false;
 	
 	public static Random rand;
@@ -120,6 +120,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	}
 	
 	public void update() {
+		
+		if(player.noEnemies()) {
+			framesNextLevel++;
+			if(framesNextLevel == 30) {
+				framesNextLevel = 0;
+				if(NextLevel)
+					NextLevel = false;
+				else
+					NextLevel = true;
+			}
+		}
 		
 		if(GameState == "Normal") {
 			restartMap = false;
@@ -189,6 +200,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		g.dispose();
 		g = bs.getDrawGraphics();
 		g.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
+		
+		g.setFont(new Font("arial", Font.BOLD, 36));
+		g.setColor(Color.black);
+		if(NextLevel)
+			g.drawString("Go to the Portal", WIDTH/2 + 90, HEIGHT/2 + 140);
 		
 		if(GameState.equals("End")) {
 			Graphics2D g2 = (Graphics2D)g;

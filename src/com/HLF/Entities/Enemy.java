@@ -19,7 +19,7 @@ public class Enemy extends Entity{
 	private BufferedImage[] sprites;
 	private BufferedImage spriteDamage;
 	
-	private double life;
+	private double life, damageP;
 	
 	private boolean damage = false;
 	private int damageFrames = 8, damageCurrent = 0;
@@ -29,13 +29,15 @@ public class Enemy extends Entity{
 	
 	/*CONSTRUTOR*/
 
-	public Enemy(int x, int y, int width, int height, BufferedImage sprite, double speed, double life,
-			int sprite_x, int sprite_y) {
+	public Enemy(int x, int y, int width, int height, double speed, double life,
+			int sprite_x, int sprite_y, int spriteDamage_x, int spriteDamage_y, double damageP) {
 		super(x, y, width, height, null);
 		
 		this.life = life;
 		this.speed = speed;
+		this.damageP = damageP;
 
+		spriteDamage = Game.spritesheet.getSprite(spriteDamage_x, spriteDamage_y, 16, 16);
 		
 		sprites = new BufferedImage[4];
 		
@@ -81,7 +83,7 @@ public class Enemy extends Entity{
 			}
 		} else {
 			if(Game.rand.nextInt(100) < 5) {
-			Game.player.life -= 0.5;
+			Game.player.life -= damageP;
 			Game.player.damage = true;
 			}
 			
@@ -110,7 +112,7 @@ public class Enemy extends Entity{
 			g.drawImage(sprites[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
 		
 		else
-			g.drawImage(Entity.enemyDamage, this.getX() - Camera.x, this.getY() - Camera.y, null);
+			g.drawImage(spriteDamage, this.getX() - Camera.x, this.getY() - Camera.y, null);
 	}
 	
 	public boolean isColliding(int xNext, int yNext) { // colisão entre inimigos
