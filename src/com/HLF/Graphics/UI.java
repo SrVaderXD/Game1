@@ -5,7 +5,6 @@ import java.awt.Graphics;
 
 import com.HLF.main.Game;
 
-
 public class UI {
 	
 	public void render(Graphics g) {

@@ -226,8 +226,10 @@ public class Player extends Entity{
 	}
 	
 	public boolean noEnemies() {
-		if(Game.enemies.size() == 0)
+		if(Game.enemies.size() == 0) {
+			Game.GameState = "StageClear";
 			return true;
+			}
 		
 		return false;
 	}

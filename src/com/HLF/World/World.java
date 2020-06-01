@@ -47,7 +47,7 @@ public class World {
 						tiles[xx + (yy * WIDTH)] = new WallTile(TILE_SIZE*xx, TILE_SIZE*yy, Tile.TileWall);
 						
 					} else if(pixelAtual == 0xFF5B0089) {
-						// Walls
+						// Portal
 						tiles[xx + (yy * WIDTH)] = new PortalTile(TILE_SIZE*xx, TILE_SIZE*yy, Tile.TilePortal);
 					} else if(pixelAtual == 0xFF0026FF) {
 						// Player
