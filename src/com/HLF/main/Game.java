@@ -35,7 +35,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static final int HEIGHT = 160;
 	public static final int SCALE = 3;
 	
-	private int currentLevel = 1, maxLevel = 3;
+	private int currentLevel = 1, maxLevel = 4;
 	
 	private BufferedImage image;
 	
@@ -164,7 +164,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			if(restartMap) {
 				restartMap = false;
 				GameState = "Normal";
-				currentLevel = 1;
 				String map = "map"+currentLevel+".png";
 				World.restart(map);
 			}
@@ -269,17 +268,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
 	public void keyPressed(KeyEvent k) {
 		if(k.getKeyCode() == KeyEvent.VK_D) {
-			if(GameState == "Normal")
+			if(GameState == "Normal" || GameState == "StageClear")
 				player.right = true;
 		} 
 		
 		else if(k.getKeyCode() == KeyEvent.VK_A) {
-			if(GameState == "Normal")
+			if(GameState == "Normal" || GameState == "StageClear")
 				player.left = true;
 		}
 		
 		if(k.getKeyCode() == KeyEvent.VK_W) {
-			if(GameState == "Normal")
+			if(GameState == "Normal" || GameState == "StageClear")
 				player.up = true;
 			
 			if(GameState == "Menu")
@@ -287,24 +286,32 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		} 
 		
 		else if(k.getKeyCode() == KeyEvent.VK_S) {
-			
-			if(GameState == "Normal")
+			if(GameState == "Normal" || GameState == "StageClear")
 				player.down = true;
 			
 			if(GameState == "Menu")
 				menu.down = true;
 		}
 		
-		
-		
 		if(k.getKeyCode() == KeyEvent.VK_SPACE) {
-			if(GameState == "Normal")
+			if(GameState == "Normal" || GameState == "StageClear")
 				player.shuriT = true;
 		}
 		
 		if(k.getKeyCode() == KeyEvent.VK_R) {
-			if(GameState == "Normal")
 				restartMap = true;
+		}
+		
+		if(k.getKeyCode() == KeyEvent.VK_ENTER) {
+			if(GameState == "Menu")
+				menu.enter = true;
+		}
+		
+		if(k.getKeyCode() == KeyEvent.VK_ESCAPE){
+			if(GameState == "Normal" || GameState == "StageClear") {
+				GameState = "Menu";
+				menu.pause = true;
+			}
 		}
 	}
 

@@ -54,52 +54,57 @@ public class Enemy extends Entity{
 	/*METODOS*/
 	public void update() {
 		
-		if(Entity.isColliding(this, Game.player) == false) {
+		if(Game.GameState == "Normal") {
 		
-		if((int)x < Game.player.getX() 
-				&& World.isFree((int)(x+speed), this.getY()) &&
-				!isColliding((int)(x+speed), this.getY())) {
-			x += speed;
-		} else if((int)x > Game.player.getX() && World.isFree((int)(x-speed), this.getY()) &&
-				!isColliding((int)(x-speed), this.getY())) {
-			x -= speed;
-		}
+			if(Entity.isColliding(this, Game.player) == false) {
+			
+				if((int)x < Game.player.getX() 
+						&& World.isFree((int)(x+speed), this.getY()) &&
+						!isColliding((int)(x+speed), this.getY())) {
+					x += speed;
+				} else if((int)x > Game.player.getX() && World.isFree((int)(x-speed), this.getY()) &&
+						!isColliding((int)(x-speed), this.getY())) {
+					x -= speed;
+				}
+				
+				if((int)y < Game.player.getY() && World.isFree(this.getX(), (int)(y+speed)) &&
+						!isColliding((this.getX()), (int)(y+speed))) {
+					y += speed;
+				} else if((int)y > Game.player.getY() && World.isFree(this.getX(), (int)(y-speed)) &&
+						!isColliding((this.getX()), (int)(y-speed))) {
+					y -= speed;
+				}
+				
 		
-		if((int)y < Game.player.getY() && World.isFree(this.getX(), (int)(y+speed)) &&
-				!isColliding((this.getX()), (int)(y+speed))) {
-			y += speed;
-		} else if((int)y > Game.player.getY() && World.isFree(this.getX(), (int)(y-speed)) &&
-				!isColliding((this.getX()), (int)(y-speed))) {
-			y -= speed;
-		}
-		
-
-		frames++;
-		if(frames == maxFrames) {
-			frames = 0;
-			index++;
-			if(index > maxIndex) 
-				index = 0;
-			}
-		} else {
-			if(Game.rand.nextInt(100) < 5) {
-			Game.player.life -= damageP;
-			Game.player.damage = true;
+				frames++;
+				if(frames == maxFrames) {
+					frames = 0;
+					index++;
+					if(index > maxIndex) 
+						index = 0;
+					}
+			} 
+			
+			else {
+				if(Game.rand.nextInt(100) < 5) {
+				Game.player.life -= damageP;
+				Game.player.damage = true;
+				}
+				
 			}
 			
-		}
-		
-		collidingShuri();
-		
-		if(life <= 0)
-			destroy();
-		
-		if(damage) {
-			damageCurrent++;
+			collidingShuri();
 			
-			if(damageCurrent == damageFrames) {
-				damageCurrent = 0;
-				damage = false;
+			if(life <= 0)
+				destroy();
+			
+			if(damage) {
+				damageCurrent++;
+				
+				if(damageCurrent == damageFrames) {
+					damageCurrent = 0;
+					damage = false;
+				}
 			}
 		}
 		

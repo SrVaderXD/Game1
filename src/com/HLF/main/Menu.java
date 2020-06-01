@@ -11,7 +11,8 @@ public class Menu {
 	
 	public int currentOption = 0, maxOption = (options.length)-1;
 
-	public boolean up, down;
+	public boolean up, down, enter;
+	public boolean pause = false;
 	
 	public void update() {
 		
@@ -28,6 +29,18 @@ public class Menu {
 			if(currentOption > maxOption)
 				currentOption = 0;
 		}
+		
+		if(enter) {
+			enter = false;
+			if(options[currentOption] == "Start Game" || options[currentOption] == "Resume") {
+				Game.GameState = "Normal";
+				pause = false;
+			}
+			
+			else if(options[currentOption] == "Exit") {
+				System.exit(1);
+			}
+		}
 	}
 	
 	public void render(Graphics g) {
@@ -41,7 +54,11 @@ public class Menu {
 		//Menu options
 		g.setColor(Color.white);
 		g.setFont(new Font("arial", Font.BOLD, 36));
-		g.drawString("Start Game", Game.WIDTH / 2 + 134, Game.HEIGHT / 2 + 100);
+		if(!pause)
+			g.drawString("Start Game", Game.WIDTH / 2 + 134, Game.HEIGHT / 2 + 100);
+		else
+			g.drawString("Resume", Game.WIDTH / 2 + 154, Game.HEIGHT / 2 + 100);
+		
 		g.drawString("Exit", Game.WIDTH / 2 + 189, Game.HEIGHT / 2 + 220);
 		
 		if(options[currentOption] == "Start Game") {
