@@ -98,12 +98,16 @@ public class Menu {
 		if(tutorial) {
 			currentOption = 3 ;
 			g.setColor(Color.BLACK);
-			g.setFont(new Font("arial", Font.BOLD, 32));
+			g.setFont(new Font("arial", Font.BOLD, 26));
 			g.drawString("W,A,S,D - MOVE", Game.WIDTH /2 - 100, Game.HEIGHT / 2 + 35);
 			g.drawString("ENTER - SELECT OPTIONS", Game.WIDTH /2 - 100, Game.HEIGHT / 2 + 195);
 			g.drawString("SPACE - THROW SHURIKEN", Game.WIDTH / 2 -100, Game.HEIGHT / 2 + 115);
 			g.drawString("ESC - PAUSE", Game.WIDTH / 2 - 100, Game.HEIGHT / 2 + 275);
-			
+			g.drawString("Goal: ", Game.WIDTH / 2 + 280, Game.HEIGHT / 2 + -20);
+			g.drawString("Kill all the enemies and", Game.WIDTH / 2 + 280, Game.HEIGHT / 2 + 10);
+			g.drawString("step into the portal to", Game.WIDTH / 2 + 280, Game.HEIGHT / 2 + 40);
+			g.drawString("advance to next the stage", Game.WIDTH / 2 + 280, Game.HEIGHT / 2 + 70);
+
 			g.setColor(Color.white);
 			g.setFont(new Font("arial", Font.BOLD, 36));
 			g.drawString("Back", Game.WIDTH / 2 + 460, Game.HEIGHT / 2 + 370);

@@ -68,6 +68,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	/*CONSTRUTOR*/
 	
 	public Game() {
+		Sound.backGround.loop();
 		rand = new Random();
 		addKeyListener(this);
 		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
@@ -172,7 +173,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			if(restartMap) {
 				restartMap = false;
 				GameState = "Normal";
-				String map = "map1.png";
+				String map = "map"+currentLevel+".png";
 				World.restart(map);
 			}
 		}
@@ -252,6 +253,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		}
 		
 		if(GameState == "StageClear") {
+			g.drawString("STAGE CLEAR", WIDTH/2 + 94, HEIGHT/2 + 90);
 			if(NextLevel)
 				g.setColor(new Color(91, 0, 137));
 				g.drawString("Go to the Portal", WIDTH/2 + 90, HEIGHT/2 + 140);

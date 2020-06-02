@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import com.HLF.World.Camera;
 import com.HLF.World.World;
 import com.HLF.main.Game;
+import com.HLF.main.Sound;
 
 public class Enemy extends Entity{
 	
@@ -88,6 +89,7 @@ public class Enemy extends Entity{
 			else {
 				if(Game.rand.nextInt(100) < 5) {
 				Game.player.life -= damageP;
+				Sound.hurt.play();
 				Game.player.damage = true;
 				}
 				
@@ -155,6 +157,7 @@ public class Enemy extends Entity{
 					if(!ShurikenThrow.wall && !ShurikenThrow.ground) {
 						damage = true;
 						life -= 1.4;
+						Sound.enemyDamage.play();
 						return;
 					}
 				}

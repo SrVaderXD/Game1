@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import com.HLF.World.Camera;
 import com.HLF.World.World;
 import com.HLF.main.Game;
+import com.HLF.main.Sound;
 
 public class Player extends Entity{
 	
@@ -178,6 +179,7 @@ public class Player extends Entity{
 				if(Entity.isColliding(this, atual)) {
 					ammo+=1;
 					weapon = true;
+					Sound.collectShuri.play();
 					Game.entities.remove(i);
 				}
 			}
@@ -196,6 +198,7 @@ public class Player extends Entity{
 						ammo = 1;
 					weapon = true;
 					removeShuri = true;
+					Sound.collectShuri.play();
 					Game.shuriw.clear();
 				}
 			}
@@ -211,6 +214,7 @@ public class Player extends Entity{
 					life+=2;
 					if(life > 8)
 						life = 8;
+					Sound.collectItem.play();
 					Game.entities.remove(i);
 				}
 			}
@@ -221,8 +225,10 @@ public class Player extends Entity{
 		if(!(World.inPortal((int)(x + speed), this.getY())) || 
 				!(World.inPortal((int)(x - speed), this.getY())) || 
 				!(World.inPortal(this.getX(), (int)(y - speed))) || 
-				!(World.inPortal(this.getX(), (int)(y + speed))))
+				!(World.inPortal(this.getX(), (int)(y + speed)))) {
 			inPortal = true;
+			Sound.portal.play();
+		}
 	}
 	
 	public boolean noEnemies() {

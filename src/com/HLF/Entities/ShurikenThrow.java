@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import com.HLF.World.Camera;
 import com.HLF.World.World;
 import com.HLF.main.Game;
+import com.HLF.main.Sound;
 
 public class ShurikenThrow extends Entity{
 	
@@ -58,6 +59,8 @@ public class ShurikenThrow extends Entity{
 			
 			x+=dx*spd;
 			y+=dy*spd;
+			Sound.shurikenSound.play();
+			Sound.shurikenWall.play();
 			wall = false;
 			ground = false;
 			Game.player.removeShuri = false;
