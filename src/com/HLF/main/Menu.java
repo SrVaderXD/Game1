@@ -32,6 +32,7 @@ public class Menu {
 		}
 		
 		if(enter) {
+			Sound.backGround.loop();
 			enter = false;
 			
 			if(options[currentOption] == "Start Game" || options[currentOption] == "Resume") {
