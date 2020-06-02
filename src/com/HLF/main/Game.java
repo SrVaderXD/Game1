@@ -55,9 +55,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	public static String GameState = "Menu";
 	private boolean GameOver, NextLevel;
 	private int framesGameOver = 0, framesNextLevel = 0;
-	private boolean restartMap = false;
+	public static boolean restartMap = false;
 	
 	public Menu menu;
+	
+	public End end;
 	
 	public static Random rand;
 	
@@ -79,6 +81,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		shuriw = new ArrayList<ShurikenWall>();
 		spritesheet = new SpriteSheet("/spritesheet.png");
 		menu = new Menu();
+		end = new End();
 		
 		//Inicializando o player
 		player = new Player(0, 0, 16, 16, spritesheet.getSprite(80, 16, 16, 16));
@@ -124,7 +127,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	
 	public void update() {
 		
-		if(GameState == "Normal" || GameState =="StageClear") {
+		if(GameState == "Normal" || GameState == "StageClear") {
 			restartMap = false;
 			
 			for(int i = 0; i < entities.size(); i++) {
@@ -135,8 +138,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			for(int i = 0; i < shuri.size(); i++)
 				shuri.get(i).update();
 			
-			nextLevel();
-			
 			if(player.noEnemies()) {
 				framesNextLevel++;
 				if(framesNextLevel == 30) {
@@ -146,6 +147,13 @@ public class Game extends Canvas implements Runnable, KeyListener {
 					else
 						NextLevel = true;
 				}
+			}
+			
+			nextLevel();
+			
+			if(currentLevel == maxLevel) {
+				GameState = "TheEnd";
+				currentLevel = 1;
 			}
 		
 		} 
@@ -164,13 +172,25 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			if(restartMap) {
 				restartMap = false;
 				GameState = "Normal";
-				String map = "map"+currentLevel+".png";
+				String map = "map1.png";
 				World.restart(map);
 			}
 		}
 		
 		else if(GameState == "Menu") {
 			menu.update();
+		}
+		
+		else if(GameState == "TheEnd") {
+			entities.clear();
+			end.update();
+			
+			if(restartMap) {
+				restartMap = false;
+				GameState = "Normal";
+				String map = "map"+currentLevel+".png";
+				World.restart(map);
+			}
 		}
 	}
 	
@@ -197,7 +217,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			shuri.get(i).render(g);
 		}
 		
-		ui.render(g);
+		if(GameState == "Normal" || GameState == "StageClear")
+			ui.render(g);
 		
 		/***/
 		
@@ -225,8 +246,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			menu.render(g);
 		}
 		
+		else if(GameState == "TheEnd") {
+			entities.clear();
+			end.render(g);
+		}
+		
 		if(GameState == "StageClear") {
 			if(NextLevel)
+				g.setColor(new Color(91, 0, 137));
 				g.drawString("Go to the Portal", WIDTH/2 + 90, HEIGHT/2 + 140);
 		}
 			
@@ -283,6 +310,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			
 			if(GameState == "Menu")
 				menu.up = true;
+			
+			if(GameState == "TheEnd")
+				end.up = true;
 		} 
 		
 		else if(k.getKeyCode() == KeyEvent.VK_S) {
@@ -291,6 +321,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			
 			if(GameState == "Menu")
 				menu.down = true;
+			
+			if(GameState == "TheEnd")
+				end.down = true;
 		}
 		
 		if(k.getKeyCode() == KeyEvent.VK_SPACE) {
@@ -305,6 +338,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		if(k.getKeyCode() == KeyEvent.VK_ENTER) {
 			if(GameState == "Menu")
 				menu.enter = true;
+			
+			if(GameState == "TheEnd")
+				end.enter = true;
 		}
 		
 		if(k.getKeyCode() == KeyEvent.VK_ESCAPE){
@@ -337,14 +373,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		if(player.noEnemies() && player.inPortal) {
 			currentLevel++;
 			GameState = "Normal";
-			if(currentLevel > maxLevel) {
-				currentLevel = 1; 
-			}
+			
 			String map = "map"+currentLevel+".png";
-			World.restart(map);
+			World.restart(map);		
 				
 		}
 	}
+	
+
 	
 		/***/
 }
